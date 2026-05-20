@@ -1,8 +1,8 @@
-import API from '../config';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import API from '../config';
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -12,7 +12,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const bottomRef = useRef(null);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/messages/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -21,13 +21,13 @@ export default function Chat() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [id, token]);
 
   useEffect(() => {
     fetchMessages();
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
-  }, [id, token]);
+  }, [fetchMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -37,7 +37,7 @@ export default function Chat() {
     e.preventDefault();
     if (!newMessage.trim()) return;
     try {
-      await axios.post(`http://localhost:5000/api/messages/${id}`, { content: newMessage }, {
+      await axios.post(`${API}/api/messages/${id}`, { content: newMessage }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNewMessage('');
