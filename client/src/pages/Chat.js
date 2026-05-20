@@ -1,3 +1,4 @@
+import API from '../config';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,7 +14,7 @@ export default function Chat() {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/messages/${id}`, {
+      const res = await axios.get(`${API}/api/messages/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(res.data);

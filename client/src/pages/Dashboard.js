@@ -1,3 +1,4 @@
+import API from '../config';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -11,7 +12,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/users/discover', {
+        const res = await axios.get(`${API}/api/users/discover`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(res.data);
@@ -24,7 +25,7 @@ export default function Dashboard() {
 
   const handleLike = async (id) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/matches/like/${id}`, {}, {
+      const res = await axios.post(`${API}/api/matches/like/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert(res.data.message);
